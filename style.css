@@ -1,0 +1,54 @@
+body{
+        margin:0;
+        padding:0;
+        
+}
+.container{
+    
+        
+        width: 1350px;
+        height:475px;
+
+        background-color: #cedbe7;
+        margin-top: 100px;
+        align-content: center;
+        display:grid;
+        grid-template-columns: repeat(54,25px);
+        grid-template-rows: repeat(19,25px);
+        
+    
+}
+.block{
+        
+        border: 0.005px solid rgb(158, 157, 157);
+        transition-duration:.4s;
+        text-align: center;
+        font-style: italic;
+
+
+}
+
+.vis{
+        background-color: rgb(73, 110, 233);
+}
+.wall{
+        background-color: black;
+}
+.start{
+        background-color:rgb(3, 184, 3);
+
+}
+.end{
+        background-color: red;
+}
+.start_hov:hover{
+        background-color: rgb(3, 184, 3);
+}
+.end_hov:hover{
+        background-color: red;
+}
+.path{
+        background-color: yellow;
+        
+
+}
