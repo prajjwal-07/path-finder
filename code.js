@@ -10,7 +10,7 @@ for(var i=0;i<n*m;i++){
     const square=document.createElement('div');
     square.classList.add('block');
     square.setAttribute('id',i);
-    //console.log(square);
+
     a.push(square);
     container.appendChild(square);
     vis.push(0);
@@ -105,7 +105,7 @@ async function bfs(s1,d1){
         
         var si=queue.length;
         while(si--){
-        //console.log(queue);
+        
         let e= queue.shift();
         let p=e.id;
         
