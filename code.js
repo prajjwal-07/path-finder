@@ -4,8 +4,9 @@ const  n=54;
 const m=19;
 var vis=[];
 var p=[];
+var k=0;
 const container=document.querySelector('.container');
-    
+//broad creation  
 for(var i=0;i<n*m;i++){
     const square=document.createElement('div');
     square.classList.add('block');
@@ -16,11 +17,9 @@ for(var i=0;i<n*m;i++){
     vis.push(0);
         
 }    
-    
 
 var s=document.getElementById("342");
 s.classList.add("start");
-
 var d=document.getElementById("680");
 d.classList.add("end");
 var is_start_mark=1;
@@ -72,7 +71,7 @@ document.addEventListener("click",function(e){
 
 });
 
-function foo(){
+async function foo(){
     if(vis[s.id])
     {
         vis[s.id]=0;
@@ -85,15 +84,12 @@ function foo(){
         d.classList.remove("wall");
     }
     
-    bfs(s,d);
-    
-    
+    await bfs(s,d);
+    // if(d.classList.contains("vis"))
+    // path();
 }
-    
-    
-    
-    
 
+//bfs algo
 async function bfs(s1,d1){
 
     let queue=[];
@@ -108,9 +104,7 @@ async function bfs(s1,d1){
         
         let e= queue.shift();
         let p=e.id;
-        
         let x=Math.floor(p/n);
-        
         let y=p%n;
         if(x+1<m&&vis[(x+1)*n+y]==0)
         {
@@ -118,7 +112,7 @@ async function bfs(s1,d1){
             vis[(x+1)*n+y]=parseInt(p)+1;
             a[(x+1)*n+y].classList.add("vis");
             if(a[(x+1)*n+y]==d1)
-            return;
+            break;
         }
         if(x-1>=0&&vis[(x-1)*n+y]==0)
         {
@@ -126,7 +120,7 @@ async function bfs(s1,d1){
             vis[(x-1)*n+y]=parseInt(p)+1;
             a[(x-1)*n+y].classList.add("vis");
             if(a[(x-1)*n+y]==d1)
-            return;
+            break;
         }
         if(y+1<n&&vis[(x)*n+y+1]==0)
         {
@@ -134,7 +128,7 @@ async function bfs(s1,d1){
             vis[(x)*n+y+1]=parseInt(p)+1;
             a[(x)*n+y+1].classList.add("vis");
             if(a[(x)*n+y+1]==d1)
-            return;
+            break;
         }
         if(y-1>=0&&vis[(x)*n+y-1]==0)
         {
@@ -142,11 +136,13 @@ async function bfs(s1,d1){
             vis[x*n+y-1]=parseInt(p)+1;
             a[(x)*n+y-1].classList.add("vis");
             if(a[(x)*n+y-1]==d1)
-            return;
+            break;
         }
 
 
         }
+        if(vis[d1.id])
+        break;
         await new Promise(resolve =>
             setTimeout(() => {
                 resolve();
@@ -157,54 +153,90 @@ async function bfs(s1,d1){
         
     
     }
-
-}
-async function dfs(s1,d1)
-{
-    
-    var stack=[];
-    stack.push(s1);
-    
-    while(stack.length!=0)
+    //path
+    if(!d.classList.contains("vis"))
+    return;
+    var v=vis[d.id]-1;
+    for(;v!=s.id;v=vis[v]-1)
     {
-        var i;
-        while(stack.length!=0)
-        {
-            i=stack.pop();
-            if(vis[i.id]==0)
-            break;
-            
-        }
-        
-
-
-        i.classList.add("vis");
-        
-        if(d1.classList.contains('vis'))
-        return;
-        var p=i.id;
-        var x=Math.floor(p/n);
-        var y=p%n;
-        vis[p]=p+1;
-        
+        a[v].classList.add("path");
         await new Promise(resolve =>
             setTimeout(() => {
                 resolve();
-            }, 15)
+            }, 100)
         );
-        
-        if(x+1<m&&!vis[(x+1)*n+y])    
-        stack.push(a[(x+1)*n+y]);
-        if(x-1>=0&&!vis[(x-1)*n+y])
-        stack.push(a[(x-1)*n+y]);
-        if(y+1<n&&!vis[x*n+y+1])
-        stack.push(a[(x)*n+y+1]);
-        if(y-1>=0&&!vis[x*n+y-1])
-        stack.push(a[(x)*n+y-1]);
     }
+
 
 }
 
+//dfs algo
+async function dfs(s1,d1){
+    s1.classList.add("vis");
+    if(s1==d1)
+    {
+        k=1;
+        return;
+    }
+    
+    await new Promise(resolve =>
+        setTimeout(() => {
+            resolve();
+        }, 15)
+    );
+    let p=s1.id;
+    let x=Math.floor(p/n);
+    let y=p%n;
+    vis[p]=1;
+    if(x+1<m&&!vis[(x+1)*n+y])
+    {
+        if(k==1)
+        return;
+
+        await dfs(a[(x+1)*n+y],d1);
+        if(k==1)
+        {
+            vis[p]=(x+1)*n+y;
+        }
+        
+        
+    }
+    if(x-1>=0&&!vis[(x-1)*n+y])
+    {
+        if(k==1)
+        return;
+
+        await dfs(a[(x-1)*n+y],d1);
+        if(k==1)
+        {
+            vis[p]=(x-1)*n+y;
+        }
+       
+    }
+    if(y+1<n&&vis[x*n+y+1]==0)
+    {
+        if(k==1)
+        return;
+        await dfs(a[x*n+y+1],d1);
+        if(k==1)
+        {
+            vis[p]=x*n+y+1;
+        }
+    }
+    if(y-1>=0&&vis[(x)*n+y-1]==0)
+    {
+        if(k==1)
+        return;
+        await dfs(a[x*n+y-1],d1);
+        if(k==1)
+        {
+            vis[p]=x*n+y-1;
+        }
+    }
+    
+
+
+}
 
 function maze()
 {
@@ -226,18 +258,19 @@ function maze()
 }
 
 async function path(){
-    var v=vis[d.id]-1;
-    for(;v!=s.id;v=vis[v]-1)
+    var v=vis[s.id];
+    for(;v!=d.id;v=vis[v])
     {
         a[v].classList.add("path");
         await new Promise(resolve =>
             setTimeout(() => {
                 resolve();
-            }, 100)
+            }, 50)
         );
     }
 
 }
+
 
 
 

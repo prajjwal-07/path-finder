@@ -29,7 +29,7 @@ body{
 }
 
 .vis{
-        background-color: rgb(73, 110, 233);
+        background-color: rgb(83, 176, 252);
 }
 .wall{
         background-color: black;
@@ -48,7 +48,7 @@ body{
         background-color: red;
 }
 .path{
-        background-color: yellow;
+        background-color: rgb(241, 245, 31);
         
 
 }
