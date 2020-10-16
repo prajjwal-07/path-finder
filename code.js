@@ -3,7 +3,6 @@ var a=[];
 const  n=54;
 const m=19;
 var vis=[];
-var p=[];
 var k=0;
 const container=document.querySelector('.container');
 //broad creation  
@@ -71,7 +70,22 @@ document.addEventListener("click",function(e){
 
 });
 
-async function foo(){
+function run_bfs(){
+    if(vis[s.id])
+    {
+        vis[s.id]=0;
+        s.classList.remove("wall");
+
+    }
+    if(vis[d.id])
+    {
+        vis[d.id]=0;
+        d.classList.remove("wall");
+    }
+    bfs(s,d);
+
+}
+async function run_dfs(){
     if(vis[s.id])
     {
         vis[s.id]=0;
@@ -84,9 +98,9 @@ async function foo(){
         d.classList.remove("wall");
     }
     
-    await bfs(s,d);
-    // if(d.classList.contains("vis"))
-    // path();
+    await dfs(s,d); 
+    if(d.classList.contains("vis"))
+    path();
 }
 
 //bfs algo
@@ -146,7 +160,7 @@ async function bfs(s1,d1){
         await new Promise(resolve =>
             setTimeout(() => {
                 resolve();
-            }, 100)
+            }, 50)
         );
         
         
@@ -163,7 +177,7 @@ async function bfs(s1,d1){
         await new Promise(resolve =>
             setTimeout(() => {
                 resolve();
-            }, 100)
+            }, 50)
         );
     }
 
@@ -238,7 +252,172 @@ async function dfs(s1,d1){
 
 }
 
-function maze()
+
+
+async function path(){
+    var v=vis[s.id];
+    for(;v!=d.id;v=vis[v])
+    {
+        a[v].classList.add("path");
+        await new Promise(resolve =>
+            setTimeout(() => {
+                resolve();
+            }, 50)
+        );
+    }
+
+}
+//...............maze algo..............///
+async function recr_maze(){
+    var dir=['u','d','l','r'];
+    for(i=0;i<n;i++){
+        vis[i]=1;
+        a[i].classList.add("wall");
+        await new Promise(resolve =>
+            setTimeout(() => {
+                resolve();
+            }, 15)
+        );
+    }
+    for(i=107;i<n*m;i+=n){
+        vis[i]=1;
+        a[i].classList.add("wall");
+        await new Promise(resolve =>
+            setTimeout(() => {
+                resolve();
+            }, 15)
+        );
+    }
+    for(i=n*m-1;i>=972;i--){
+        vis[i]=1;
+        a[i].classList.add("wall");
+        await new Promise(resolve =>
+            setTimeout(() => {
+                resolve();
+            }, 15)
+        );
+    }
+    for(i=918;i>0;i-=n){
+        vis[i]=1;
+        a[i].classList.add("wall");
+        await new Promise(resolve =>
+            setTimeout(() => {
+                resolve();
+            }, 15)
+        );
+    }
+    
+    
+
+    var s=document.getElementById("110");
+    async function maze_dfs(s)
+    {
+        vis[s.id]=1;
+        s.classList.add("wall");
+        await new Promise(resolve =>
+            setTimeout(() => {
+                resolve();
+            }, 15)
+        );
+        dir.sort(()=>Math.random()-0.5);
+        var p=parseInt(s.id);
+        var x=Math.floor(p/n);
+        x=x*p;
+        var y=(x+1)*n;
+        for(let i=0;i<4;i++)
+        {
+            if(dir[i]=='u')
+            {
+                let flag=1;
+                for(let j=-1;j<=1;j++)
+                {
+                    for(let k=1;k<=2;k++)
+                    {
+                        var cor=p-k*n+j;
+                        if(vis[cor])
+                        {
+                            flag=0;
+                            break;
+                        }
+                    }
+                    if(!flag)
+                    break;
+                }
+                if(flag)
+                {
+                    await maze_dfs(a[p-n]);
+                }
+            }
+            if(dir[i]=='d')
+            {
+                let flag=1;
+                for(let j=-1;j<=1;j++)
+                {
+                    for(let k=1;k<=2;k++)
+                    {
+                        var cor=p+k*n+j;
+                        if(vis[cor])
+                        {
+                            flag=0;
+                            break;
+                        }
+                    }
+                    if(!flag)
+                    break;
+                }
+                if(flag)
+                await maze_dfs(a[p+n]);
+
+            }
+            if(dir[i]=='l')
+            {
+                let flag=1;
+                for(let j=-1;j<=1;j++)
+                {
+                    for(let k=1;k<=2;k++)
+                    {
+                        var cor=p-j*n-k;
+                        if(vis[cor])
+                        {
+                            flag=0;
+                            break;
+                        }
+                    }
+                    if(!flag)
+                    break;
+                }
+                if(flag)
+                await maze_dfs(a[p-1]);
+
+            }
+            if(dir[i]=='r')
+            {
+                let flag=1;
+                for(let j=-1;j<=1;j++)
+                {
+                    for(let k=1;k<=2;k++)
+                    {
+                        var cor=p-j*n+k;
+                        if(vis[cor])
+                        {
+                            flag=0;
+                            break;
+                        }
+                    }
+                    if(!flag)
+                    break;
+                }
+                if(flag)
+                await maze_dfs(a[p+1]);
+            }
+        }
+        
+    }
+    maze_dfs(s);
+
+}
+
+function rand_maze()
 {
     var i;
     var cnt=300;
@@ -257,21 +436,18 @@ function maze()
     
 }
 
-async function path(){
-    var v=vis[s.id];
-    for(;v!=d.id;v=vis[v])
+function clear_path(){
+    for(let i=0;i<n*m;i++)
     {
-        a[v].classList.add("path");
-        await new Promise(resolve =>
-            setTimeout(() => {
-                resolve();
-            }, 50)
-        );
+        if(a[i].classList.contains("vis"))
+        {
+            a[i].classList.remove("vis");
+            vis[i]=0;
+            if(a[i].classList.contains("path"))
+            a[i].classList.remove("path");
+        }
     }
-
 }
-
-
 
 
 
