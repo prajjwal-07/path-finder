@@ -1,3 +1,3 @@
 # pathfinding visualizer
 <hr>
-<a href="https://github.com/prajjwal-07/path-finder/edit/main/README.md"> click to visualize </a>
+<a href="https://htmlpreview.github.io/?https://github.com/prajjwal-07/path-finder/blob/main/main.html"> click to visualize </a>
