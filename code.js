@@ -4,6 +4,11 @@ const  n=54;
 const m=19;
 var vis=[];
 var k=0;
+var dis=[];
+var g=[];
+var list=[];
+var list_contain=[];
+var par=[];
 const container=document.querySelector('.container');
 //broad creation  
 for(var i=0;i<n*m;i++){
@@ -14,12 +19,16 @@ for(var i=0;i<n*m;i++){
     a.push(square);
     container.appendChild(square);
     vis.push(0);
+    dis.push(1000000);
+    par.push(-1);
+    g.push(0);
+    list_contain.push(0);
         
 }    
 
-var s=document.getElementById("342");
+var s=document.getElementById("502");
 s.classList.add("start");
-var d=document.getElementById("680");
+var d=document.getElementById("518");
 d.classList.add("end");
 var is_start_mark=1;
 var is_end_mark=1;
@@ -85,6 +94,7 @@ function run_bfs(){
     bfs(s,d);
 
 }
+
 async function run_dfs(){
     if(vis[s.id])
     {
@@ -97,10 +107,38 @@ async function run_dfs(){
         vis[d.id]=0;
         d.classList.remove("wall");
     }
-    
+    k=0;
     await dfs(s,d); 
     if(d.classList.contains("vis"))
     path();
+    return ;
+}
+
+function run_astar(){
+    
+    if(vis[s.id])
+    {
+        vis[s.id]=0;
+        s.classList.remove("wall");
+
+    }
+    if(vis[d.id])
+    {
+        vis[d.id]=0;
+        d.classList.remove("wall");
+    }
+    while(list.length>0)
+    list.pop();
+
+    for(var i=0;i<n*m;i++)
+    {
+        dis[i]=1000000;
+        par[i]=-1;
+        g[i]=0;
+        list_contain[i]=0;
+    }
+    console.log(list.length);
+    astar(s,d);
 }
 
 //bfs algo
@@ -170,10 +208,16 @@ async function bfs(s1,d1){
     //path
     if(!d.classList.contains("vis"))
     return;
+    var path=[];
     var v=vis[d.id]-1;
     for(;v!=s.id;v=vis[v]-1)
     {
-        a[v].classList.add("path");
+        path.push(a[v]);
+    }
+    path.reverse();
+    for(i=0;i<path.length;i++)
+    {
+        path[i].classList.add("path");
         await new Promise(resolve =>
             setTimeout(() => {
                 resolve();
@@ -187,17 +231,19 @@ async function bfs(s1,d1){
 //dfs algo
 async function dfs(s1,d1){
     s1.classList.add("vis");
-    if(s1==d1)
-    {
-        k=1;
-        return;
-    }
+    
+    
     
     await new Promise(resolve =>
         setTimeout(() => {
             resolve();
         }, 15)
     );
+    if(s1==d1)
+    {
+        k=1;
+        return;
+    }
     let p=s1.id;
     let x=Math.floor(p/n);
     let y=p%n;
@@ -252,6 +298,112 @@ async function dfs(s1,d1){
 
 }
 
+// astar algo
+function heuristic(x1,y1){
+    return Math.abs(x1-Math.floor(d.id/n))+Math.abs(y1-d.id%n);
+}
+async function astar(s,d){
+    
+    dis[s]=heuristic(Math.floor(s.id/n),s.id%n);
+    g[s]=0;
+    list.push(s.id);
+    list_contain[s.id]=1;
+    while(list.length>=1){
+        var curr=0;
+        for(let i=0;i<list.length;i++){
+            if(dis[list[curr]]>dis[list[i]])
+            curr=i;
+        }
+        
+        if(list[curr]==d.id)
+        {
+            break;
+        }
+        var p=list[curr];
+        list.splice(curr,1);
+        list_contain[p]=0;            
+        if(vis[p])
+        continue;
+        
+        vis[p]=1;
+        a[p].classList.add("vis");
+
+        var x=Math.floor(p/n)
+        var y=p%n;
+        
+        if(x+1<m&&!vis[(x+1)*n+y])
+        {
+            if(dis[(x+1)*n+y]>g[x*n+y]+1+heuristic(x+1,y))
+            {
+                dis[(x+1)*n+y]=g[x*n+y]+1+heuristic(x+1,y);
+                g[(x+1)*n+y]=g[x*n+y]+1;
+                par[(x+1)*n+y]=x*n+y;
+                if(list_contain[(x+1)*n+y]==0)
+                list.push((x+1)*n+y);
+            }
+        }
+        if(x-1>=0&&!vis[(x-1)*n+y])
+        {
+            if(dis[(x-1)*n+y]>g[x*n+y]+1+heuristic(x-1,y))
+            {
+                dis[(x-1)*n+y]=g[x*n+y]+1+heuristic(x-1,y);
+                g[(x-1)*n+y]=g[x*n+y]+1;
+                par[(x-1)*n+y]=x*n+y;
+                if(list_contain[(x-1)*n+y]==0)
+                list.push((x-1)*n+y);
+            }
+        }
+        if(y+1<n&&!vis[x*n+y+1])
+        {
+            if(dis[x*n+y+1]>g[x*n+y]+1+heuristic(x,y+1))
+            {
+                dis[x*n+y+1]=g[x*n+y]+1+heuristic(x,y+1);
+                g[x*n+y+1]=g[x*n+y]+1;
+                par[x*n+y+1]=x*n+y;
+                if(list_contain[x*n+y+1]==0)
+                list.push(x*n+y+1);
+            }
+        }
+        if(y-1>=0&&!vis[x*n+y-1])
+        {
+            if(dis[x*n+y-1]>g[x*n+y]+1+heuristic(x,y-1))
+            {
+                dis[x*n+y-1]=g[x*n+y]+1+heuristic(x,y-1);
+                g[x*n+y-1]=g[x*n+y]+1;
+                par[x*n+y-1]=x*n+y;
+                if(list_contain[x*n+y-1]==0)
+                list.push(x*n+y-1);
+            }
+        }
+        await new Promise(resolve =>
+            setTimeout(() => {
+                resolve();
+            }, 10)
+        );
+
+
+
+    }
+    //path
+    var path=[];
+    var i=par[d.id];
+    for(;i!=s.id;i=par[i])
+    {
+        path.push(a[i]);
+    }
+    path.reverse();
+    for(i=0;i<path.length;i++)
+    {
+        path[i].classList.add('path');
+        await new Promise(resolve =>
+            setTimeout(() => {
+                resolve();
+            }, 50)
+        );
+
+    }
+
+}
 
 
 async function path(){
@@ -439,12 +591,25 @@ function rand_maze()
 function clear_path(){
     for(let i=0;i<n*m;i++)
     {
+        
         if(a[i].classList.contains("vis"))
         {
             a[i].classList.remove("vis");
             vis[i]=0;
+            
             if(a[i].classList.contains("path"))
             a[i].classList.remove("path");
+        }
+    }
+}
+function clear_board(){
+    clear_path();
+    for(i=0;i<n*m;i++)
+    {
+        vis[i]=0;
+        if(a[i].classList.contains("wall"))
+        {
+            a[i].classList.remove("wall");
         }
     }
 }

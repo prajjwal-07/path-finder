@@ -1,28 +1,41 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>no 1</title>
-        
-        <link rel="stylesheet" href="style.css">
-        
-    </head>
-    <body>
-        
-        <button onclick="run_bfs()">BFS</button>
-        <button onclick="run_dfs()">DFS</button>
-        
-        <button onclick="rand_maze()">random maze</button>
-        <button onclick="recr_maze()">recursive maze</button>
-        <button onclick="clear_path()">clear path</button>
-        <div class="container">
-        </div>
-
-       
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     
+  </head>
+  <body>
+    <nav>
+      <level class="name">Path Visualizer</level>
+      <ul>
         
-    <script src="code.js"></script>
-    </body>
+        <li><a href="#">Algorithms <i class="fas fa-caret-down"></i></a>
+          <ul>
+          <li><a href="#" onclick="run_bfs()">Breadth first Search</a></li>
+          <li><a href="#" onclick="run_dfs()">Depth first Search</a></li>
+          <li><a href="#"onclick="run_astar()">A* Search</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Maze <i class="fas fa-caret-down"></i></a>
+          <ul>
+          <li><a href="#"onclick="recr_maze()">Recursive Maze</a></li>
+          <li><a href="#" onclick="rand_maze()">Random Maze</a></li>
+          </ul>
+        </li>
+        <li><a href="#"onclick="clear_board()">Clear Board</a></li>
+        <li><a href="#"onclick="clear_path()">Clear Path</a></li>
+      </ul>
+    </nav>
 
-        
+    <div class="container">
+    </div>
+
+   
+
     
+<script src="code.js"></script>
+    
+  </body>
 </html>

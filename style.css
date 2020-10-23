@@ -1,54 +1,117 @@
-body{
-        margin:0;
-        padding:0;
+*{
+        margin:0px;
+        padding: 0px;
+        list-style: none;
+        text-decoration: none;
+      }
+      body{
+        font-family: sans-serif;
+        overflow: hidden;
+        background-color:cornsilk;
         
-}
-.container{
-    
-        
+      }
+      nav{
+        height: 60px;
+        background: #063247; /*color*/
+        box-shadow: 0 3px 15px rgba(0,0,0,.4);
+      }
+      nav .name{
+        color: white;
+        font-size: 30px;
+        font-weight: bold;
+        line-height: 60px;
+        padding-left: 40px;
+      
+      }
+      nav ul{
+        float:right;
+        margin-right:300px;
+      }
+      nav ul li{
+        position: relative;
+        display: inline-block;
+      }
+      nav ul li a{
+        color: white;
+        display: block;
+        padding: 0 25px;
+        line-height: 60px;
+        font-size: 20px;
+        background: #063247;
+        transition: .5s;
+      }
+      
+      nav ul li a:hover{
+        color: #23dbdb;
+      }
+      nav ul ul{
+        position: absolute;
+        top:60px;
+        border-top: 3px solid #23dbdb;
+        opacity: 0;
+        visibility: hidden;
+      }
+      nav ul li:hover > ul{
+        top: 60px;
+        opacity: 1;
+        visibility: visible;
+        transition: .3s linear;
+      }
+      nav ul ul li{
+        width:230px;
+        display: list-item;
+        position: relative;
+        border: 1px solid #042331;
+        border-top: none;
+      }
+      .container{
+          
+              
         width: 1350px;
         height:475px;
-
-        background-color: #cedbe7;
+        
+        background-color: white;
         margin-top: 100px;
+        margin-left:auto;
+        margin-right:auto;
         align-content: center;
         display:grid;
         grid-template-columns: repeat(54,25px);
         grid-template-rows: repeat(19,25px);
         
-    
-}
-.block{
+      
+      }
+      .block{
         
-        border: 0.005px solid rgb(158, 157, 157);
+        border: 0.005px solid rgb(189, 188, 188);
         transition-duration:.4s;
         text-align: center;
         font-style: italic;
-
-
-}
-
-.vis{
+      
+      
+      }
+      
+      .vis{
         background-color: rgb(83, 176, 252);
-}
-.wall{
-        background-color: black;
-}
-.start{
+      }
+      .wall{
+        background-color: #06263b;
+      }
+      .start{
         background-color:rgb(3, 184, 3);
-
-}
-.end{
+      
+      }
+      .end{
         background-color: red;
-}
-.start_hov:hover{
+      }
+      .start_hov:hover{
         background-color: rgb(3, 184, 3);
-}
-.end_hov:hover{
+      }
+      .end_hov:hover{
         background-color: red;
-}
-.path{
-        background-color: rgb(241, 245, 31);
+      }
+      .path{
+        background-color: #ffff45;
         
-
-}
+      
+      }
